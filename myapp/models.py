@@ -180,3 +180,9 @@ class Review(models.Model):
     def __str__(self):
         return f"Review by {self.user.first_name} {self.user.last_name} for {self.product.name} - {self.rating} stars"
 
+class Wishlist(models.Model):
+    wishlist_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlists")
+    quantity = models.PostiveIntegerField(default=1)
+    
