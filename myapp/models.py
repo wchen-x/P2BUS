@@ -68,7 +68,24 @@ class Product(models.Model):
             raise ValidationError("Price must be greater than 0.")
         
     def __str__(self):
-        return self.name       
+        return self.name    
+    
+    
+class Address(models.Model):
+    """Model for storing user addresses."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses", null=True, blank=True)
+    address_line_1 = models.CharField(max_length=150) 
+    address_line_2 = models.CharField(max_length=150)   # Apartment number, floor etc
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    country=models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)   # Optional phone number
+    is_primary = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.address_line_2}, {self.address_line_1}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
+   
 
 class Order(models.Model):
     """Model to store order information."""
@@ -113,22 +130,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name} in Order {self.order.order_id}"
-
-
-class Address(models.Model):
-    """Model for storing user addresses."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses", null=True, blank=True)
-    address_line_1 = models.CharField(max_length=150) 
-    address_line_2 = models.CharField(max_length=150)   # Apartment number, floor etc
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=20)
-    country=models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)   # Optional phone number
-    is_primary = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.address_line_2}, {self.address_line_1}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
 
 
 class Review(models.Model):
