@@ -71,9 +71,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name       
 
-class Wishlist:
-    pass
-
 class Order(models.Model):
     """ Model to store order information"""
     order_id = models.AutoField(primary_key=True)   # Order number automatically increments when created and is assigned as the primary key
