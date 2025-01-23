@@ -73,7 +73,7 @@ class Product(models.Model):
 class Order(models.Model):
     """Model to store order information."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
-    product = models.ManyToMany(Product, through='OrderItem')
+    product = models.ManyToManyField(Product, through='OrderItem')
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name="orders")
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     payment_status = models.CharField(
@@ -154,5 +154,5 @@ class Wishlist(models.Model):
     """Model to store customer wishlists."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlists")
-    quantity = models.PostiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=1)
     
