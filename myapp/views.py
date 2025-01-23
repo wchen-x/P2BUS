@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def home(request):
-    return HttpResponse("Hello Django!")
+# admin login
+# admin 
+# Chen's usual password
 
-# hello world
+def home(request):
+    return render(request, "myapp/home.html", {})
