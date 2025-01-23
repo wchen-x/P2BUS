@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.timezone import now
 from datetime import timedelta
 from django.core.exceptions import ValidationError
@@ -12,6 +11,18 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
+    
+    groups = models.ManyToManyField(
+        Group,
+        related_name="custom_user_groups", 
+        blank=True,
+    )
+    
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name="custom_user_permissions",
+        blank=True,
+    )
     
     class Role(models.TextChoices):
         CUSTOMER = 'customer', 'Customer'
@@ -36,12 +47,12 @@ class User(AbstractUser):
         return self.role == self.Role.CUSTOMER
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.get_role_display()})"
+        return f"{self.first_name} {self.last_name} ({self.role})"
 
 
 class Product(models.Model):
     """Model to store product information."""
-    name = models.CharField(blank=False)
+    name = models.CharField(max_length=255, blank=False)
     brand =  models.CharField(max_length=50, blank=False)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     description = models.CharField(max_length=500, blank=False)
@@ -59,7 +70,7 @@ class Product(models.Model):
         choices=Category.choices
     )
     
-    image = models.ImageField(upload_to='product_images/')
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
     in_stock = models.BooleanField(default=False) # whether product is in stock or not
     
     def clean(self):
@@ -117,7 +128,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Order {self.order_id} by {self.user.first_name} {self.user.last_name} on {self.created_at}"
+        return f"Order {self.id} by {self.user.first_name} {self.user.last_name} on {self.created_at.strftime('%Y-%m-%d')}"
 
 
 class OrderItem(models.Model):
@@ -126,10 +137,14 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
+    def save(self, *args, **kwargs):
+        self.subtotal = self.quantity * self.price_per_unit
+        super().save(*args, **kwargs)   
+ 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in Order {self.order.order_id}"
+        return f"{self.quantity} x {self.product.name} in Order {self.order.id}"
 
 
 class Review(models.Model):
@@ -141,12 +156,13 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class meta:
+    class Meta:
         # Ensures user can leave only one review per product
         constraints = [
             models.UniqueConstraint(fields=['product', 'user'], name='unique_product_user_review')
         ]
-    
+
+
     def __str__(self):
         return f"Review by {self.user.first_name} {self.user.last_name} for {self.product.name} - {self.rating} stars"
 
@@ -156,4 +172,9 @@ class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlists")
     quantity = models.PositiveIntegerField(default=1)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'product'], name='unique_user_product_wishlist')
+        ]
     
