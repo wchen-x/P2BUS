@@ -73,7 +73,6 @@ class Product(models.Model):
 
 class Order(models.Model):
     """ Model to store order information"""
-    order_id = models.AutoField(primary_key=True)   # Order number automatically increments when created and is assigned as the primary key
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     product = models.ManyToMany(Product, through='OrderItem')
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name="orders")
@@ -106,7 +105,6 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     """Intermediate table to represent products in an order"""
-    orderItem_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
@@ -132,7 +130,6 @@ class Address(models.Model):
         return f"{self.address_line_2}, {self.address_line_1}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
 
 class Review(models.Model):
-    review_id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     rating = models.PositiveSmallIntegerField()
@@ -150,7 +147,6 @@ class Review(models.Model):
         return f"Review by {self.user.first_name} {self.user.last_name} for {self.product.name} - {self.rating} stars"
 
 class Wishlist(models.Model):
-    wishlist_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlists")
     quantity = models.PostiveIntegerField(default=1)
