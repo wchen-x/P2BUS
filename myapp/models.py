@@ -17,7 +17,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     
     class Role(models.TextChoices):
-        CUSTOMER = 'custom4er', 'Customer'
+        CUSTOMER = 'customer', 'Customer'
         ADMIN = 'admin', 'Admin'
         
     role = models.CharField(
@@ -41,8 +41,35 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.get_role_display()})"
 
-class Product:
-    pass
+class Product(models.Model):
+    name = models.CharField(blank=False)
+    brand =  models.CharField(max_length=50, blank=False)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+    description = models.CharField(max_length=500, blank=False)
+    HTU = models.CharField(max_length=500, blank=False) # how to use
+    COO =  models.CharField(max_length=50, blank=False) # country of origin
+    
+    class Category(models.TextChoices):
+        SKINCARE = 'skincare', 'Skincare'
+        HAIRBODY = 'hair&body', 'Hair & Body'
+        MAKEUP = 'makeup', 'Makeup'
+        NECESSITIES = 'necessities', 'Necessities'
+        
+    category =  models.CharField(
+        max_length=20,
+        choices=Category.choices
+    )
+    
+    image = models.ImageField(upload_to='product_images/')
+    in_stock = models.BooleanField(default=False) # whether product is in stock or not
+    
+    def clean(self):
+        super().clean()
+        if self.price <= 0:
+            raise ValidationError("Price must be greater than 0.")
+        
+    def __str__(self):
+        return self.name       
 
 class Wishlist:
     pass
