@@ -1,13 +1,10 @@
 from django.db import models
-
-from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
-from libgravatar import Gravatar
 from datetime import timedelta
 from django.core.exceptions import ValidationError
+    
     
 class User(AbstractUser):
     """Model used for user authentication, and team member-related information."""
@@ -41,7 +38,9 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.get_role_display()})"
 
+
 class Product(models.Model):
+    """Model to store product information."""
     name = models.CharField(blank=False)
     brand =  models.CharField(max_length=50, blank=False)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
@@ -71,11 +70,9 @@ class Product(models.Model):
     def __str__(self):
         return self.name       
 
-class Wishlist:
-    pass
 
 class Order(models.Model):
-    """ Model to store order information"""
+    """Model to store order information."""
     order_id = models.AutoField(primary_key=True)   # Order number automatically increments when created and is assigned as the primary key
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     product = models.ManyToMany(Product, through='OrderItem')
@@ -107,8 +104,9 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.order_id} by {self.user.first_name} {self.user.last_name} on {self.created_at}"
 
+
 class OrderItem(models.Model):
-    """Intermediate table to represent products in an order"""
+    """Intermediate table to represent products in an order."""
     orderItem_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -119,8 +117,9 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name} in Order {self.order.order_id}"
 
+
 class Address(models.Model):
-    """Model for storing user addresses"""
+    """Model for storing user addresses."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses", null=True, blank=True)
     address_line_1 = models.CharField(max_length=150) 
     address_line_2 = models.CharField(max_length=150)   # Apartment number, floor etc
@@ -134,7 +133,9 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.address_line_2}, {self.address_line_1}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
 
+
 class Review(models.Model):
+    """Model for storing reviews."""
     review_id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
@@ -152,7 +153,9 @@ class Review(models.Model):
     def __str__(self):
         return f"Review by {self.user.first_name} {self.user.last_name} for {self.product.name} - {self.rating} stars"
 
+
 class Wishlist(models.Model):
+    """Model to store customer wishlists."""
     wishlist_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlists")
