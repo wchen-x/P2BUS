@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Customer
 
 class UserRegistrationForm(UserCreationForm):
     """Registration form for creating new users."""
@@ -8,11 +8,14 @@ class UserRegistrationForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
         
         def save(self, commit=True):
             user = super().save(commit=False)
             user.role = User.Role.CUSTOMER
             if commit:
                 user.save()
+                Customer.objects.create(
+                    user=user,
+                )
             return user
