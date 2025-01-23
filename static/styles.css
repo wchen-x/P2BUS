@@ -1,0 +1,39 @@
+/* Custom Styling */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    text-transform: capitalize;
+    padding: 10px 15px;
+}
+
+.navbar-nav .dropdown-menu {
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background-color: #f7f7f7;
+    padding: 3rem 0;
+}
+
+.hero-section .btn-dark {
+    background-color: #333;
+    border: none;
+}
+
+.hero-section .btn-outline-dark {
+    border: 2px solid #333;
+    color: #333;
+}
+
+.hero-section img {
+    border-radius: 10px;
+}
