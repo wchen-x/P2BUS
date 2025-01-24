@@ -9,15 +9,70 @@
     background-color: #eae9d1;
 }
 
-/*-----header-----*/
+/* header section */
 .header {
-    min-height: 100vh;
-    width: 100%;
+    padding: 15px 10px;
     background-color: #f9ffcd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+    border-bottom: 2px solid rgb(228, 228, 48);
 }
 
-.header-short {
-    min-height: 4vh;
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+.shop-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain; 
+}
+
+.shop-name {
+    font-size: 24px;
+    color: rgb(48, 48, 48);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* search bar */
+.search-container {
+    display: flex;
+    justify-content: flex-end; 
+    margin-top: 10px;
+}
+
+.search-form {
+    display: flex; 
+    gap: 5px; 
+}
+
+.search-input {
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 4px 0 0 4px; 
+    outline: none;
+    flex-grow: 1; 
+    max-width: 300px; 
+}
+
+.search-button {
+    padding: 8px 15px;
+    background-color: rgb(228, 228, 48);
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-button:hover {
+    background-color: rgb(200, 200, 40);
 }
 
 /*-----navigation bar-----*/
@@ -140,5 +195,27 @@ nav {
 
     .nav-links.active {
         display: flex; 
+    }
+
+    .header {
+        flex-direction: column; /* Stack items vertically */
+        text-align: center;
+    }
+
+    .search-form {
+        flex-direction: column; /* Stack input and button vertically */
+        align-items: stretch; /* Ensure both input and button stretch to full width */
+    }
+
+    .search-input, .search-button {
+        width: 100%; /* Full width for both */
+        border-radius: 4px; /* Reset border radius */
+    }
+
+    .search-button {
+        margin-top: 5px; /* Add spacing between input and button */
+    }
+    .logo-container {
+        justify-content: center; /* Center-align logo and name */
     }
 }
