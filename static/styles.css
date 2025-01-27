@@ -10,14 +10,18 @@
 }
 
 /* header section */
+
 .header {
-    padding: 15px 10px;
+    padding: 10px 20px;
     background-color: #f9ffcd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; 
     border-bottom: 2px solid rgb(228, 228, 48);
+}
+
+.header-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    gap: 20px; 
 }
 
 .logo-container {
@@ -202,6 +206,11 @@ nav {
         text-align: center;
     }
 
+    .search-container{
+        width: 100%;
+        margin-top: 10px;
+    }
+    
     .search-form {
         flex-direction: column; /* Stack input and button vertically */
         align-items: stretch; /* Ensure both input and button stretch to full width */
