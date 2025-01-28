@@ -36,3 +36,4 @@ class UserLoginForm(forms.Form):
             if user is None:
                 raise forms.ValidationError("Invalid username or password")
         return cleaned_data
+    

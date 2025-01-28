@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserLoginForm, UserRegistrationForm, UserProfileUpdateForm, UserUpdateAddressForm
+from .forms import UserLoginForm, UserRegistrationForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
@@ -97,3 +97,15 @@ def reset_password(request, uidb64, token):
 def account_dashboard(request):
     """Displays the user account overview page"""
     return render(request, "users/account_dashboard.html", {"user": request.user})
+
+def profile(request):
+    pass
+
+def address_list(request):
+    pass
+
+def orders(request):
+    pass
+
+def wishlist(request):
+    pass
