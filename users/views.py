@@ -5,7 +5,7 @@ from .forms import UserLoginForm, UserRegistrationForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 
 def register(request):
@@ -57,6 +57,7 @@ def forgot_password(request):
                 recipient_list=[email],
             )
             messages.success(request, "A password reset link has been set to your email.")
+            return redirect("login_view")
         except User.DoesNotExist:
             messages.error(request, "No account found with that email.")
     return render(request, 'users/forgot_password.html')

@@ -5,5 +5,5 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', login_view, name='login_view'),
     path('login/forgot_password/', forgot_password, name="forgot_password"),
-    path('reset_password/', reset_password, name="reset_password")
+    path('reset_password/<uidb64>/<token>/', reset_password, name="reset_password")
 ]
