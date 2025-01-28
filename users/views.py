@@ -1,12 +1,13 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import UserLoginForm, UserRegistrationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import UserLoginForm, UserRegistrationForm, UserProfileUpdateForm, UserUpdateAddressForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     """View to handle user registration."""
@@ -38,6 +39,11 @@ def login_view(request):
     else:
         form = UserLoginForm()
     return render(request, 'users/login.html', {'form': form})
+
+def logout_view(request):
+    """Logs out the user and redirects to login page."""
+    logout(request)
+    return redirect("home")
 
 def forgot_password(request):
     """View to handle user forgot password - inputting email for new password link"""
@@ -86,3 +92,8 @@ def reset_password(request, uidb64, token):
     else:
         messages.error(request, "The password reset link is invalid or has expired.")
         return redirect("forgot_password")
+
+@login_required
+def account_dashboard(request):
+    """Displays the user account overview page"""
+    return render(request, "users/account_dashboard.html", {"user": request.user})
