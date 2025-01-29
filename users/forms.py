@@ -45,3 +45,13 @@ class UserProfileForm(forms.modelForm):
     class Meta:
         model = User
         fields = ["username", "email"]
+
+class AddressForm(forms.ModelForm):
+    """Form for adding/editing addresses"""
+    class Meta:
+        model = Address
+        fields = [
+            "address_line_1", "address_line2", "city", "state", 
+            "postal_code", "country", "is_primary",
+        ]
+

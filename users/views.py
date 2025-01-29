@@ -120,9 +120,28 @@ def address_list(request):
     addresses = Address.objects.filter(user=request.user)
 
     if request.method == "POST":
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            messages.sucess(request, "Address saved successfully!")
+            return redirect("address_list")
+    else:
+        form = AddressForm()
 
+    return render(request, "users/address_list.html", {"addresses": addresses, "form": form})
+
+@login_required
 def orders(request):
-    pass
+    """Displays user's past orders"""
+    user_orders = Order.objects.filter(user=request.user).order_by("-created_at")
+    
+    return render(request, "users/orders.html", {"orders": user_orders})    
 
+@login_required
 def wishlist(request):
-    pass
+    """Displays user's wishlist items"""
+    wishlist_items = WishlistItem.objects.filter(user=request.user)
+
+    return render(request, "users/wishlist.html", {"wishlist_items": wishlist_items})
