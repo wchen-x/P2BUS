@@ -98,11 +98,28 @@ def account_dashboard(request):
     """Displays the user account overview page"""
     return render(request, "users/account_dashboard.html", {"user": request.user})
 
+@login_required
 def profile(request):
-    pass
+    """Allows users to view and edit their profile information"""
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated succcessfully!")
+            return redirect("profile")
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = UserProfileForm(instance=request.user)
 
+    return render(request, "users/profile.html", {"form": form})
+
+@login_required
 def address_list(request):
-    pass
+    """Displays the user's addresses and allows adding/editing"""
+    addresses = Address.objects.filter(user=request.user)
+
+    if request.method == "POST":
 
 def orders(request):
     pass

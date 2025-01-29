@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from .models import User, Customer
+from django.contrib.auth.models import User
 
 class UserRegistrationForm(UserCreationForm):
     """Registration form for creating new users."""
@@ -37,3 +38,10 @@ class UserLoginForm(forms.Form):
                 raise forms.ValidationError("Invalid username or password")
         return cleaned_data
     
+class UserProfileForm(forms.modelForm):
+    """Form for updating user profile information"""
+    phone_number = forms.CharField(max_length=15, required=False, label="Phone Number")
+
+    class Meta:
+        model = User
+        fields = ["username", "email"]
