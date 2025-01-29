@@ -1,13 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserLoginForm, UserRegistrationForm
+from django.shortcuts import render, redirect
+from .forms import UserLoginForm, UserRegistrationForm, UserProfileForm, UserAddressForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.decorators import login_required
+from .models import Address
+from orders.models import Order, Wishlist
 
 def register(request):
     """View to handle user registration."""
@@ -120,7 +122,7 @@ def address_list(request):
     addresses = Address.objects.filter(user=request.user)
 
     if request.method == "POST":
-        form = AddressForm(request.POST)
+        form = UserAddressForm(request.POST)
         if form.is_valid():
             address = form.save(commit=False)
             address.user = request.user
@@ -128,7 +130,7 @@ def address_list(request):
             messages.sucess(request, "Address saved successfully!")
             return redirect("address_list")
     else:
-        form = AddressForm()
+        form = UserAddressForm()
 
     return render(request, "users/address_list.html", {"addresses": addresses, "form": form})
 
@@ -142,6 +144,6 @@ def orders(request):
 @login_required
 def wishlist(request):
     """Displays user's wishlist items"""
-    wishlist_items = WishlistItem.objects.filter(user=request.user)
+    wishlist_items = Wishlist.objects.filter(user=request.user)
 
     return render(request, "users/wishlist.html", {"wishlist_items": wishlist_items})
