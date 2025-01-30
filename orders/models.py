@@ -1,10 +1,16 @@
 from django.db import models
+from django.conf import settings
+from django.core.validators import MinValueValidator
 from users.models import User
 from products.models import Product
 
 class Order(models.Model):
     """Model to store order information."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="orders"
+    )
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     payment_status = models.CharField(
         max_length=20,
@@ -21,7 +27,10 @@ class OrderItem(models.Model):
     """Intermediate table to represent products in an order."""
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)] 
+    )
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
