@@ -10,12 +10,12 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
         
-        def save(self, commit=True):
-            user = super().save(commit=False)
-            user.role = User.Role.CUSTOMER
-            if commit:
-                user.save()
-                Customer.objects.create(
-                    user=user,
-                )
-            return user
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = User.Role.CUSTOMER
+        if commit:
+            user.save()
+            Customer.objects.create(
+                user=user,
+            )
+        return user
