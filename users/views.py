@@ -139,11 +139,17 @@ def orders(request):
     """Displays user's past orders"""
     user_orders = Order.objects.filter(user=request.user).order_by("-created_at")
     
+    if not user_orders:
+        messages.info(request, "You have no past orders.")
+
     return render(request, "users/orders.html", {"orders": user_orders})    
 
 @login_required
 def wishlist(request):
     """Displays user's wishlist items"""
     wishlist_items = Wishlist.objects.filter(user=request.user)
+
+    if not wishlist_items:
+        messages.info(request, "Your wishlist is empty.")
 
     return render(request, "users/wishlist.html", {"wishlist_items": wishlist_items})
