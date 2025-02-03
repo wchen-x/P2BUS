@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Customer
+from django.contrib.auth import authenticate
+from .models import User, Customer, Address
+from django.contrib.auth.models import User
 
 class UserRegistrationForm(UserCreationForm):
     """Registration form for creating new users."""

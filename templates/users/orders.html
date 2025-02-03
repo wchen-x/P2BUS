@@ -1,0 +1,35 @@
+{% extends 'base.html'}
+
+{% block content %}
+    <div class="container">
+        <h2>My Orders</h2>
+        
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if orders %}
+            <div class="order-list">
+                {% for order in orders %}
+                    <div class="order-card">
+                        <h3>Order #{{ order.id}}</h3>
+                        <p><strong>Date:</strong>{{ order.date_created }}</p>
+                        <p><strong>Status:</strong>{{ order.status }}</p>
+                        <p><strong>Total:</strong>{{ order.total_price }}</p>
+
+                        <h4>Items:</h4>
+                        <ul>
+                        {% for item in order.items.all %}
+                            <li>{{ item.product.name }} (x{{ item.quantity }}) - £{{ item.total_price }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
