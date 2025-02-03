@@ -127,7 +127,7 @@ def address_list(request):
             address = form.save(commit=False)
             address.user = request.user
             address.save()
-            messages.sucess(request, "Address saved successfully!")
+            messages.success(request, "Address saved successfully!")
             return redirect("address_list")
     else:
         form = UserAddressForm()
